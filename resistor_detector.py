@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import base64
 from PIL import Image
 import io
@@ -27,17 +27,22 @@ if uploaded_file:
     if st.button("🔍 Analyze Resistor"):
         with st.spinner("Analyzing..."):
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-4o",
-                    messages=[
-                        {"role": "user", "content": [
-                            {"type": "text", "text": "Identify the resistor value shown in this image based on the color bands."},
-                            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
-                        ]}
+                client = OpenAI(api_key=st.secrets["openai"]["api-key"])
+                response = client.chat.completions.create(
+                    model = "gpt4o",
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": "Identify the resistor value shown in this image based on the color bands."},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
+                            ]
+                        }
                     ],
                     max_tokens=100
                 )
-                result = response['choices'][0]['message']['content']
+
+                result = response.choices[0].message.content
                 st.success("Resistor Value Detected:")
                 st.write(result)
 
