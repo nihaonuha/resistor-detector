@@ -16,7 +16,7 @@ uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
     image = Image.open(uploaded_file)
-    st.image(image, caption="uploaded resistor image", use_column_width=True)
+    st.image(image, caption="uploaded resistor image", use_container_width=True)
 
     if image.mode != "RGB":
         image = image.convert("RGB")
