@@ -19,8 +19,8 @@ if uploaded_file:
     buffered = io.BytesIO()
 
     # convert to RGB if not already
-    if image.mode != "RGB":
-        image = image.convert("RGB")
+    if uploaded_file.mode != "RGB":
+        image = uploaded_file.convert("RGB")
     image.save(buffered, format="JPEG")
     img_base64 = base64.b64encode(buffered.getvalue()).decode()
     
