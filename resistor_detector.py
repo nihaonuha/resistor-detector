@@ -1,51 +1,54 @@
 import streamlit as st
-import openai
-from openai import OpenAI
+import cv2
 import base64
 from PIL import Image
-import io
+from io import BytesIO
+from openai import OpenAI
 
-# Set your API key here
-openai.api_key = st.secrets["openai"]["api-key"]
+# OpenAI setup
+client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
-# Streamlit UI
-st.set_page_config(page_title="Resistor Value Detector", layout="centered")
-st.title("Resisort")
-st.write("we've got you sorted.")
+st.title("🎥 Resistor Detector with Webcam")
+st.write("Capture a resistor image from your webcam and get its value.")
 
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+# Use Streamlit's built-in camera input
+img_file_buffer = st.camera_input("Take a picture")
 
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="uploaded resistor image", use_container_width=True)
+if img_file_buffer is not None:
+    # Read image from buffer
+    image = Image.open(img_file_buffer)
 
+    # Convert to RGB if needed
     if image.mode != "RGB":
         image = image.convert("RGB")
-    buffered = io.BytesIO()
-    image.save(buffered, format="JPEG")
-    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    # Show the image
+    st.image(image, caption="Captured Resistor", use_container_width=True)
+
+    # Convert to base64
+    buffer = BytesIO()
+    image.save(buffer, format="JPEG")
+    img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
     if st.button("🔍 Analyze Resistor"):
-        with st.spinner("Analyzing..."):
+        with st.spinner("Sending to OpenAI..."):
             try:
-                client = OpenAI(api_key=st.secrets["openai"]["api-key"])
                 response = client.chat.completions.create(
-                    model = "gpt-4o",
-                    messages = [
+                    model="gpt-4o",
+                    messages=[
                         {
                             "role": "user",
                             "content": [
                                 {"type": "text", "text": "Give only the value of this resistor in ohms"},
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
+                                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
                             ]
                         }
                     ],
                     max_tokens=100
                 )
-
                 result = response.choices[0].message.content
-                st.success("Resistor Value Detected:")
+                st.success("Resistor Value:")
                 st.write(result)
 
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"OpenAI API failed: {e}")
