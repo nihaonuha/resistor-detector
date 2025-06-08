@@ -11,7 +11,7 @@ openai.api_key = st.secrets["openai"]["api-key"]
 # Streamlit UI
 st.set_page_config(page_title="Resistor Value Detector", layout="centered")
 st.title("Resisort")
-st.write("Upload a picture of a resistor, and AI will tell you its value.")
+st.write("we've got you sorted.")
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
@@ -30,7 +30,7 @@ if uploaded_file:
             try:
                 client = OpenAI(api_key=st.secrets["openai"]["api-key"])
                 response = client.chat.completions.create(
-                    model = "gpt4o",
+                    model = "gpt-4o",
                     messages = [
                         {
                             "role": "user",
