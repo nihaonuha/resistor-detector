@@ -7,8 +7,8 @@ from openai import OpenAI
 # OpenAI setup
 client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
-st.title("🎥 Resistor Detector with Webcam")
-st.write("Capture a resistor image from your webcam and get its value.")
+st.title("Resisort")
+st.write("We've got you sorted.")
 
 # Use Streamlit's built-in camera input
 img_file_buffer = st.camera_input("Take a picture")
@@ -29,7 +29,7 @@ if img_file_buffer is not None:
     image.save(buffer, format="JPEG")
     img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-    if st.button("🔍 Analyze Resistor"):
+    if st.button("Analyze Resistor"):
         with st.spinner("Sending to OpenAI..."):
             try:
                 response = client.chat.completions.create(
@@ -38,7 +38,7 @@ if img_file_buffer is not None:
                         {
                             "role": "user",
                             "content": [
-                                {"type": "text", "text": "Give only the value of this resistor in ohms"},
+                                {"type": "text", "text": "Give only the value of this resistor in ohms. If the image is out of focus or the bands are not visible, say \"Not able to determine the value.\nMake sure the resistor is in focus\""},
                                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
                             ]
                         }
