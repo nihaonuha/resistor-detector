@@ -9,22 +9,17 @@ openai.api_key = st.secrets["openai"]["api-key"]
 
 # Streamlit UI
 st.set_page_config(page_title="Resistor Value Detector", layout="centered")
-st.title("📷 Resistor Value Detector")
+st.title("Resisort")
 st.write("Upload a picture of a resistor, and AI will tell you its value.")
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
-    # Show the image
-    buffered = io.BytesIO()
+    image = Image.open(uploaded_file)
+    st.image(image, caption="uploaded resistor image", use_column_width=True)
 
-    # convert to RGB if not already
     if image.mode != "RGB":
         image = image.convert("RGB")
-    image.save(buffered, format="JPEG")
-    img_base64 = base64.b64encode(buffered.getvalue()).decode()
-    
-    # Convert image to base64
     buffered = io.BytesIO()
     image.save(buffered, format="JPEG")
     img_base64 = base64.b64encode(buffered.getvalue()).decode()
