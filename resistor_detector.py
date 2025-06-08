@@ -16,9 +16,14 @@ uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
     # Show the image
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Resistor Image", use_column_width=True)
+    buffered = io.BytesIO()
 
+    # convert to RGB if not already
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+    image.save(buffered, format="JPEG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode()
+    
     # Convert image to base64
     buffered = io.BytesIO()
     image.save(buffered, format="JPEG")
