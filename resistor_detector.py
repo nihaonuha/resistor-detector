@@ -35,7 +35,7 @@ if uploaded_file:
                         {
                             "role": "user",
                             "content": [
-                                {"type": "text", "text": "Identify the resistor value shown in this image based on the color bands."},
+                                {"type": "text", "text": "Identify the resistor value shown in this image based on the color bands. Give only the final value of the resistor in ohms."},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
                             ]
                         }
