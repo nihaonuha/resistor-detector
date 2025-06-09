@@ -38,7 +38,7 @@ if img_file_buffer is not None:
                         {
                             "role": "user",
                             "content": [
-                                {"type": "text", "text": "Give only the value of this resistor in ohms. If the image is out of focus or the bands are not visible, say \"Not able to determine the value.\nMake sure the resistor is in focus\""},
+                                {"type": "text", "text": "Identify this resistor"},
                                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
                             ]
                         }
