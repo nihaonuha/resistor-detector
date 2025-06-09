@@ -30,7 +30,7 @@ if img_file_buffer is not None:
     img_base64 = base64.b64encode(buffer.getvalue()).decode()
 
     if st.button("Analyze Resistor"):
-        with st.spinner("Sending to OpenAI..."):
+        with st.spinner("Processing..."):
             try:
                 response = client.chat.completions.create(
                     model="gpt-4o",
